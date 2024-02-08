@@ -1,0 +1,29 @@
+.category.flex-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 1em;
+}
+
+.category button {
+    border: 1px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    margin: 0em 1em;
+    width: 64px;
+    height: 64px;
+}
+
+.category button:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+.category p {
+    padding-top: 10%;
+    margin: 0;
+}

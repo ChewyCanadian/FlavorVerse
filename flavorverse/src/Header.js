@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import logo from "./logo-no-background.png"
 import "./Header.css"
 import { RiSearchLine } from 'react-icons/ri';
 
@@ -8,11 +9,12 @@ function Header() {
         <header className="header flex-row">
             <div className="header-left">
                 <Button type="button">Login</Button>
-                <span> or </span>
+                or
                 <Button theme="blue" type="button">Register</Button>
             </div>
             <div className="header-center">
-                <a href="#default" className="logo">FlavorVerse</a>
+                {/* <a href="#default" className="logo">FlavorVerse</a> */}
+                <img src={logo} className="logo" name="flavorverse logo"></img>
             </div>
             <div className="header-right">
                 <input type="text" placeholder="Search Recipe..." name="search" />
@@ -41,7 +43,7 @@ const Button = styled.button`
   outline: 0;
   border: 0; 
   text-transform: uppercase;
-  margin: 10px 0px;
+  margin: 10px 5px;
   cursor: pointer;
   box-shadow: 0px 2px 2px lightgray;
   transition: ease background-color 250ms;
