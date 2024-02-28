@@ -9,19 +9,19 @@ function Category() {
     return (
         <div className="category flex-row">
             <button>
-                <LuSalad />
+                <LuSalad size={20} />
                 <p>Salad</p>
             </button>
             <button>
-                <GiMeat />
+                <GiMeat size={20} />
                 <p>Meat</p>
             </button>
             <button>
-                <LuSoup />
+                <LuSoup size={20} />
                 <p>Soup</p>
             </button>
             <button>
-                <GiCupcake />
+                <GiCupcake size={20} />
                 <p>Dessert</p>
             </button>
         </div>

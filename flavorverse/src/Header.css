@@ -23,7 +23,6 @@ body {
 .header a {
     color: black;
     text-align: center;
-    padding: 12px;
     text-decoration: none;
     font-size: 18px;
     line-height: 25px;
@@ -43,12 +42,34 @@ body {
 }
 
 .header a.active {
-    background-color: dodgerblue;
     color: white;
 }
 
 .header-left {
     float: left;
+}
+
+.welcome {
+    margin: 1em 5em 0em 1em;
+}
+
+.logged-in-icons {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.logged-in-icons button {
+    border: 1px;
+    border-radius: 5%;
+    margin: 0em 0em;
+    width: 48px;
+    height: 48px;
+}
+
+.logged-in-icons button:hover {
+    background-color: #ddd;
+    color: black;
 }
 
 .header-right {
@@ -61,7 +82,7 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    transform: translateX(25%);
+
 }
 
 input[type=text] {
