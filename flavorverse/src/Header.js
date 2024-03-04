@@ -1,7 +1,7 @@
 import { React, useState, useEffect } from "react";
 import styled from "styled-components";
 import logo from "./logo-no-background.png";
-import { HomePath, LoginPath, RegisterPath } from './routePaths';
+import { AddRecipePath, HomePath, LoginPath, RegisterPath } from './routePaths';
 import "./Header.css"
 import { NavLink } from "react-router-dom";
 import { RiSearchLine } from 'react-icons/ri';
@@ -16,10 +16,8 @@ export default function Header({ userData }) {
     });
     useEffect(() => {
         setUserRef(userData);
-        console.log("refreshing");
     }, [userData]);
     // eslint-disable-next-line react/prop-types
-    console.log(userRef);
 
     function logout() {
         localStorage.setItem("auth-token", "");
@@ -55,8 +53,10 @@ export default function Header({ userData }) {
                 <RiSearchLine className="search-icon" style={{ height: '2em', width: '2em' }} />
                 {userRef.user != undefined ?
                     <div className="logged-in-icons">
-                        <button><BsBookmarkHeart size={24}></BsBookmarkHeart></button>
-                        <button><BsJournalPlus size={24}></BsJournalPlus></button>
+                        <button><BsBookmarkHeart size={24}></BsBookmarkHeart>Saved</button>
+                        <NavLink className="nav-link" to={AddRecipePath}>
+                            <button><BsJournalPlus size={24}></BsJournalPlus>Add</button>
+                        </NavLink>
                     </div>
                     : null
                 }

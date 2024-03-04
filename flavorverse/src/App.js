@@ -1,25 +1,20 @@
 import './App.css';
 import { React, useEffect, useState } from 'react';
-//import { useIsFocused } from "@react-navigation/native";
 import { Route, Routes, useLocation } from 'react-router-dom';
-//import { createRoot } from 'react-dom/client';
-import { HomePath, LoginPath, RegisterPath, Url } from './routePaths';
+import { AddRecipePath, HomePath, LoginPath, RegisterPath, Url } from './routePaths';
 import Header from './Header';
 import Category from './Category';
 import Login from './Login';
 import Register from './Register';
-
-//const root = new createRoot(document.getElementById('root'));
+import AddRecipe from './AddRecipe';
 
 function App() {
-  //const isFocused = useIsFocused();
   let location = useLocation();
   const [userData, setUserData] = useState({
     token: undefined,
     user: undefined,
   });
   useEffect(() => {
-    //if (isFocused) {
     const checkLoggedIn = async () => {
       let token = localStorage.getItem("auth-token");
       if (token === null) {
@@ -52,7 +47,6 @@ function App() {
                     user: data,
                   })
                 }
-                console.log(data.id + data.username);
               }
             )
           );
@@ -60,17 +54,16 @@ function App() {
       });
     }
     checkLoggedIn();
-    //}
   }, [location]);
 
   return (
     <div className="App" >
       <Header userData={userData} />
-      <Category />
       <Routes>
-        <Route exact path={HomePath} />
+        <Route exact path={HomePath} element={<Category />} />
         <Route path={LoginPath} element={<Login />} />
         <Route path={RegisterPath} element={<Register />} />
+        <Route path={AddRecipePath} element={<AddRecipe />} />
       </Routes>
       <div id="root"></div>
     </div>

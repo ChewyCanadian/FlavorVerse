@@ -1,0 +1,135 @@
+.recipe {
+    height: 87%;
+    width: 50%;
+    position: fixed;
+    padding: 2em;
+    z-index: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.left-recipe {
+    /* float: left; */
+    left: 0;
+    /* width: 50%; */
+    background-color: lightslategray;
+}
+
+.top-section {
+    display: flex;
+    justify-content: space-around;
+    flex-direction: row;
+    align-items: flex-start;
+}
+
+.top-right-section {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    align-items: center;
+}
+
+.time-section {
+    display: flex;
+    justify-content: space-around;
+    flex-direction: row;
+    align-items: center;
+}
+
+.recipe-image,
+.image-field {
+    width: 100%;
+}
+
+.field .input-field {
+    width: 60%;
+}
+
+.label-time {
+    display: block;
+    width: max-content;
+}
+
+.side-by-side {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    align-items: flex-end;
+}
+
+.select,
+.ingredient {
+    padding: 0.6em;
+    border-radius: 6px;
+}
+
+.input {
+    margin-top: 0.4em;
+    padding: 0.4em;
+}
+
+textarea {
+    resize: none;
+}
+
+.recipe-description {
+    width: 100%;
+    height: 300px;
+}
+
+.recipe-step {
+    width: 100%;
+}
+
+.list {
+    width: 100%;
+}
+
+.time {
+    width: 60%;
+    padding: 1em 1em;
+}
+
+.serving {
+    width: 30%;
+}
+
+.label {
+    left: 0;
+    padding-bottom: 0.5em;
+}
+
+.steps,
+.ingredients {
+    display: flex;
+    /* align-items: center; */
+    flex-direction: column;
+    overflow: auto;
+    flex-grow: 1;
+}
+
+.steps label,
+.ingredients label {
+    margin-right: auto;
+    justify-self: start;
+}
+
+.add-button {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    border: none;
+    padding: 0px 3px 0px 0px;
+    border-radius: 6px;
+    background-color: lightblue;
+    font-size: 16px;
+}
+
+.right-recipe {
+    right: 0;
+    background-color: lightgray;
+}
+
+.right-recipe label {
+    float: left;
+}
