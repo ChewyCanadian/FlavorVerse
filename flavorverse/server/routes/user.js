@@ -110,35 +110,4 @@ userRoutes.route('/register').post(async function (req, response) {
         response.json(addedUser);
 });
 
-// This section will help you update a record by id.
-userRoutes.route("/update/:id").post(function (req, response) {
-    let db_connect = getDb();
-    let myquery = { _id: ObjectId(req.params.id) };
-    let newvalues = {
-        $set: {
-            username: req.body.username,
-            email: req.body.email,
-            password: req.body.password,
-        },
-    };
-    db_connect
-        .collection("users")
-        .updateOne(myquery, newvalues, function (err, res) {
-            if (err) throw err;
-            console.log("1 document updated");
-            response.json(res);
-        });
-});
-
-// This section will help you delete a record
-userRoutes.route("/:id").delete((req, response) => {
-    let db_connect = getDb();
-    let myquery = { _id: ObjectId(req.params.id) };
-    db_connect.collection("users").deleteOne(myquery, function (err, obj) {
-        if (err) throw err;
-        console.log("1 document deleted");
-        response.json(obj);
-    });
-});
-
 module.exports = userRoutes;
