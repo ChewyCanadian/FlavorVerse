@@ -193,12 +193,17 @@ textarea {
     transition: all 0.3s ease;
     border-width: 0px;
     padding: 0.6em;
+    margin-top: 0.8em;
     float: right;
-    margin-top: 1em;
     font-style: oblique;
     box-shadow: 2px 2px darkgrey;
 }
 
 .submit-recipe:hover {
     background: rgba(1, 1, 1, 0.1);
+}
+
+.basic-multi-select {
+    margin-top: 0.4em;
+    text-align: left;
 }

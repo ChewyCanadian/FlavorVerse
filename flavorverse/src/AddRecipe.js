@@ -1,30 +1,41 @@
 import { React, useState } from 'react';
 import './AddRecipe.css';
-import { Url, AddRecipePath } from './routePaths';
+import { Url, AddRecipePath, AddIngredientPath } from './routePaths';
 import { CiSquarePlus } from "react-icons/ci";
 import { SlClose } from "react-icons/sl";
+import Select from 'react-select'
+import makeAnimated from 'react-select/animated';
 //import { Url } from './routePaths';
 
-//const measurement = ['tsp', 'tbsp', 'cup', 'pt', 'qt', 'gal', 'oz', 'fl oz', 'lb'];
-
 export default function AddRecipe() {
-    const [stepId, setStepId] = useState(0);
-    const [ingredientId, setIngredientId] = useState(0);
-    const defaultStep = [{ id: stepId, description: '' }];
-    const [tempIngredientName, setTempIngredientName] = useState('');
+    //const history = useHistory();
+
     // eslint-disable-next-line no-unused-vars
     const [times, setTimes] = useState(['sec', 'min', 'hr', 'day']);
     // eslint-disable-next-line no-unused-vars
     const [measurements, setMeasurements] = useState(['tsp', 'tbsp', 'cup', 'pt', 'qt', 'gal', 'oz', 'fl oz', 'lb']);
-    const defaultIngredient = [{ id: 0, ingredientName: '', quantity: 0, measurement: '' }];
-    const [steps, setSteps] = useState([defaultStep]);
-    const [ingredients, setIngredients] = useState([defaultIngredient]);
+
+    const [stepId, setStepId] = useState(0);
+    const [ingredientId, setIngredientId] = useState(0);
+
     const [focusedIndex, setFocusedIndex] = useState(-1);
+
+    // eslint-disable-next-line no-unused-vars
+    const defaultIngredient = [{ id: 0, ingredientName: '', quantity: 0, measurement: 'tsp' }];
+    // eslint-disable-next-line no-unused-vars
+    const defaultStep = [{ id: stepId, description: '' }];
+
+    // eslint-disable-next-line no-unused-vars
+    const [tempIngredientName, setTempIngredientName] = useState('');
+    const [ingredients, setIngredients] = useState([]);
     const [searchResults, setSearchResults] = useState([]);
+
+    const [steps, setSteps] = useState([]);
+
     const [file, setFile] = useState();
 
-    const [prepTime, setPrepTime] = useState([{ time: 0, measurement: '' }]);
-    const [cookTime, setCookTime] = useState([{ time: 0, measurement: '' }]);
+    const [recipeTimes, setRecipeTimes] = useState({ prepTime: 0, prepMeasurement: 'sec', cookTime: 0, cookMeasurment: 'sec' });
+
     const [recipe, setRecipe] = useState({
         image: file,
         recipeName: '',
@@ -32,9 +43,23 @@ export default function AddRecipe() {
         description: ''
     });
 
+    const tagOptions = [
+        { value: 'meat', label: 'Meat' },
+        { value: 'soup', label: 'Soup' },
+        { value: 'vegan', label: 'Vegan' },
+        { value: 'vegetarian', label: 'Vegetarian' },
+        { value: 'breakfast', label: 'Breakfast' },
+        { value: 'dessert', label: 'Dessert' },
+        { value: 'halal', label: 'Halal' }
+    ];
+    const animatedComponents = makeAnimated();
+
+    const [selectedTags, setSelectedTags] = useState([]);
+
     function handleChange(e) {
         console.log(e.target.files);
         setFile(URL.createObjectURL(e.target.files[0]));
+        setRecipe({ ...recipe, image: URL.createObjectURL(e.target.files[0]) });
     }
 
     function handleKeyDown(e) {
@@ -55,17 +80,22 @@ export default function AddRecipe() {
     }
 
     function updateStep(value) {
-        return setSteps((prev) => {
-            return [{ ...prev, ...value }];
-        })
+        setSteps(steps.map((step, index) => {
+            if (step === undefined) return;
+            if (index === value.id) {
+                return { ...step, description: value.description };
+            }
+            else
+                return step;
+        }))
     }
 
     function updateCookTime(value) {
-        setCookTime({ ...cookTime, measurement: value.time })
+        setRecipeTimes({ ...recipeTimes, cookMeasurment: value.time });
     }
 
     function updatePrepTime(value) {
-        setPrepTime({ ...prepTime, measurement: value.time })
+        setRecipeTimes({ ...recipeTimes, prepMeasurement: value.time });
     }
 
     function updateQuantity(value) {
@@ -121,13 +151,9 @@ export default function AddRecipe() {
         })
     }
 
-    async function onSubmit(e) {
-        e.preventDefault();
-    }
-
     async function onAddIngredientClick(e) {
         e.preventDefault();
-        setIngredients((prev) => { return [...prev, { id: ingredientId, ingredientName: '', quantity: 0, measurement: '' }] });
+        setIngredients((prev) => { return [...prev, { id: ingredientId, ingredientName: '', quantity: 0, measurement: 'tsp' }] });
         setIngredientId(ingredientId + 1);
     }
 
@@ -144,12 +170,71 @@ export default function AddRecipe() {
         setIngredients(ingredients.map((ingredient, index) => {
             if (ingredient === undefined) return;
             if (index === value.id) {
-                //const filledOut = { id: ingredient.id, ingredientName: value.ingredientName, quantity: 0, measurement: '' };
                 return { ...ingredient, ingredientName: value.ingredientName }
             }
             else
                 return ingredient;
         }))
+    }
+
+    async function onSubmit(e) {
+        e.preventDefault();
+
+        let tags = [];
+        selectedTags.tags.map((tag) => tags.push({ tag: tag.value }))
+
+        const completeRecipe = {
+            image: recipe.image,
+            title: recipe.recipeName,
+            description: recipe.description,
+            tags: tags,
+            servings: recipe.servings,
+            prepTime: recipeTimes.prepTime,
+            prepTimeMeasurment: recipeTimes.prepMeasurement,
+            cookTime: recipeTimes.cookTime,
+            cookTimeMeasurment: recipeTimes.cookTimeMeasurment,
+            ingredients: { ...ingredients },
+            steps: { ...steps }
+        };
+
+        console.log(completeRecipe);
+
+        await fetch(Url + AddRecipePath, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(completeRecipe),
+        }).then(async function (res) {
+            if (res.status == 400) {
+                await res.json().then(data => alert(data["msg"]));
+            }
+            else {
+                window.history.replaceState("", "", AddIngredientPath);
+                let ingredientsToPost = [];
+                for (let i = 0; i < ingredients.length; i++) {
+                    ingredientsToPost[i] = ingredients[i].ingredientName;
+                }
+
+                await fetch(Url + AddIngredientPath, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(ingredientsToPost)
+                }).then(async function (res) {
+                    if (res.status == 400) {
+                        await res.json().then(data => alert(data["msg"]));
+                    }
+                    else
+                        window.history.replaceState("", "", AddRecipePath);
+                });
+
+                console.log("successfully finished everything");
+            }
+        }).catch(error => {
+            alert(error);
+        });
     }
 
     return (
@@ -170,7 +255,7 @@ export default function AddRecipe() {
                                 <div className="field input-field time">
                                     <label className="label-time">Prep-Time</label>
                                     <div className="side-by-side">
-                                        <input type="number" value={recipe.prepTime} onChange={(e) => updateRecipe({ prepTime: e.target.value })} placeholder='0' className='input recipe-time' required />
+                                        <input type="number" value={recipeTimes.prepTime} onChange={(e) => setRecipeTimes({ ...recipeTimes, prepTime: e.target.value })} placeholder='0' className='input recipe-time' required />
                                         <select className='field select' onChange={(e) => updatePrepTime({ time: e.target.value })}>
                                             {times.map((time, key) => <option key={key} value={time}>{time}</option>)}
                                         </select>
@@ -179,7 +264,7 @@ export default function AddRecipe() {
                                 <div className="field input-field time">
                                     <label className="label-time">Cook-Time</label>
                                     <div className='side-by-side'>
-                                        <input type="number" value={recipe.cookTime} onChange={(e) => updateRecipe({ cookTime: e.target.value })} placeholder='0' className='input recipe-time' required />
+                                        <input type="number" value={recipeTimes.cookTime} onChange={(e) => setRecipeTimes({ ...recipeTimes, cookTime: e.target.value })} placeholder='0' className='input recipe-time' required />
                                         <select className='field select' onChange={(e) => updateCookTime({ time: e.target.value })}>
                                             {times.map((time, key) => <option key={key} value={time}>{time}</option>)}
                                         </select>
@@ -197,6 +282,9 @@ export default function AddRecipe() {
                         <textarea value={recipe.description} onChange={(e) => updateRecipe({ description: e.target.value })} placeholder='Description' className='input recipe-description' required ></textarea>
                     </div>
                     <div>
+                        <Select isMulti className="basic-multi-select" pageSize={4}
+                            classNamePrefix="select" closeMenuOnSelect={false}
+                            components={animatedComponents} options={tagOptions} onChange={(e) => setSelectedTags({ ...selectedTags, tags: e })} />
                         <button type='submit' className="submit-recipe">Submit Recipe</button>
                     </div>
                 </div>
@@ -209,7 +297,7 @@ export default function AddRecipe() {
                                     <div className='ingredient-input'>
                                         <div>
                                             <SlClose className='button-close' size={20} onClick={() => { setIngredients(ingredients.filter(ingr => ingr.id !== ingredient.id)) }}></SlClose>
-                                            <input type="text" value={ingredient != null ? ingredient.ingredientName : tempIngredientName} onChange={(e) => updateIngredient({ id: index, ingredientName: e.target.value })} onFocus={() => handleOnFocus({ i: index })} onKeyDown={(e) => handleKeyDown({ key: e.key })} placeholder='Enter Ingredient' className='input ingredient'></input>
+                                            <input type="text" value={ingredient.ingredientName} onChange={(e) => updateIngredient({ id: index, ingredientName: e.target.value })} onFocus={() => handleOnFocus({ i: index })} onKeyDown={(e) => handleKeyDown({ key: e.key })} placeholder='Enter Ingredient' className='input ingredient'></input>
                                             <input type="number" value={ingredient.quantity} onChange={(e) => updateQuantity({ id: index, quantity: e.target.value })} placeholder='0' className='input quantity' required />
                                             <select className='field select' onChange={(e) => updateMeasurment({ id: index, measurement: e.target.value })}>
                                                 {measurements.map((measurement, key) => <option key={key} value={key}>{measurement}</option>)}
@@ -238,7 +326,7 @@ export default function AddRecipe() {
                                 <div key={index}>
                                     <SlClose className='button-close' size={20} onClick={() => { setSteps(steps.filter(stp => stp.id !== step.id)) }}></SlClose>
                                     <label htmlFor={step + index}>Step {index + 1}:</label>
-                                    <textarea id={step + index} value={step.description} onChange={(e) => updateStep({ description: e.target.value })} cols={7} placeholder='Step Description' className='input recipe-step'></textarea>
+                                    <textarea id={step + index} value={step.description} onChange={(e) => updateStep({ id: index, description: e.target.value })} cols={7} placeholder='Step Description' className='input recipe-step'></textarea>
                                 </div>
                             ))}
                         </div>
