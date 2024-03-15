@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "elevated-bonito-417115",
+  "private_key_id": "00c617cd8fb5190116e6add7756e7c283b0d5b8e",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDjxyOWjjdAK38h\n11OUE4HnuIxwx47t/r9QiHp6MdMQL8VNjUh/a4Z1cIWvhXUkDwpOQ48hCz3GuqFX\nm9mSe+HiuwhZYh5fWFwFciw0jshUfmoFgiP0kvSZEI21ITD9cnegeyXZLDGT5Vab\ngi4Nezi+6XfByJTPccu+sTx5pjzWQM5zsOmlDLKp+T9m2t/CH+1ySCDIktvdvwdZ\nEK30WIEfaxKcsWTa1kjjdl0v3iCyB10LGkPkJmvQZbUm9/rOadfjptvuPBFPhU9U\nw+4waUJz6kxd4ScHxh1EjoLd5EaLkT7HokDCuI8W2Zg+ROc9koblvVTqXKCNfeFw\nFau+yanzAgMBAAECggEAIAr+LypfjGfyEQ0tJUofPr1gCGeSbFmniUlBzZnfwsmt\nnGzRM5epSTEkpV4FbiatgPgRFQlzTdcoZl4229wQmWhNUuGyOyB/hYabwGMLvJMy\nEAdQTpIz1aqV/NKoBSeKu6lHWEdWzCL5rZPBLcVVZMoMPlcc1BgCnRdq1gQ0T8F3\nHklTMbFkvB6U+K6rOyOkb1VNZeJp2C01Eaxv6EHEbVBSo7Z/6PLnYlKEcs4BoyKw\nk90tQoi9PAApRXAVYDs85gRIEqqivBOwN5eaJ3Wkzcz0YefBvyJKN56btY9R7ir1\nSTcoCvm3vjdnr5aQEOFRLqKaEBDjjrcUq/cDEXrefQKBgQD/Jsul1m/TtwQ1JaY4\nHDXolo+I0p8/3EFaC+/hApHurxpmFSszinzDiE7y4ycVsTRZPdfnjrXEHvdL1sVq\nkrb7zG40sqUIJMPhRw+QAOMQIwuXZ+UGTqV8pTXSnVf7fjUfaPVkQApYOMujE7Q9\n5tEypVJzt5+d3B7M1izu7o7v/QKBgQDkiQp8xWRBaUrWma6caF8gDpWEZL+C/7ns\nzul43CBTElgIlzV0u/BiiycBTYWCAnekDxMKuFG3A5HVtrtnzyrTDy19A56Mscou\nqsLT6sAZCQ6EWCbtQnaSNrlvLMpzTRa4OT8hyTrV3Ulshh7hhwgiQg/PwXaW4jlZ\nEu1xdA7MrwKBgBG909lDMOFqz2sWpBkwtProRTDBXHtnSFAHlnVx5U3QdSh1/lwG\nHCjIeJzg+J3EhZxS9YlPXgo2EQH//Bgt/XVCwML/TQRk8g3fEBD2TtOXbD3p5n3q\nyA0Du9taP3zoSK9XcAC5hz6dLGO5ggXv38oCvtn3Aa1LWgTqO5OdmOjNAoGABWJV\nJOthmUjpwnSMcJLk6tRtIVleSa/MqY+WYIqPGGXuPQWS9NUYrLmqiZVR9+Ym+25/\nfFkrU6x52xcbAy8WSzKoV7GmIpptsPvE60k0jWJxPRz2jdBrCrbPV5cujdjbGCwB\nGMKs6Cz2deATCi0sO+JijPp52MQrpbWUcn/ReXECgYEAhLSLhJk4ncFuiPUa5bhj\nAabP0zT3o1pbgFEEop+gXSQ4BYElYE5IAVRQjHpeGhJ2AlsqyU+DFW1KMRqoUyx/\nxpLtajxwMcBqIyfTxMSRiq7LuiYKdrNMHDT7xEvEnytgzciOiqYUjZ81QrFPDkIV\nRiJNuigRhmiquzPtPkhtVUo=\n-----END PRIVATE KEY-----\n",
+  "client_email": "admin-45@elevated-bonito-417115.iam.gserviceaccount.com",
+  "client_id": "114564002230810203132",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/admin-45%40elevated-bonito-417115.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

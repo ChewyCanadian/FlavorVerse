@@ -23,6 +23,10 @@
     color: black;
 }
 
+.category button:focus {
+    outline: #909090 double 4px;
+}
+
 .category p {
     padding-top: 10%;
     margin: 0;

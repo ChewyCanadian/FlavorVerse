@@ -9,7 +9,8 @@ import { BsJournalPlus } from "react-icons/bs";
 import { BsBookmarkHeart } from "react-icons/bs";
 
 // eslint-disable-next-line react/prop-types
-export default function Header({ userData }) {
+export default function Header({ userData, updateReload }) {
+    //const navigate = useNavigate();
     const [userRef, setUserRef] = useState({
         token: undefined,
         user: undefined,
@@ -19,12 +20,16 @@ export default function Header({ userData }) {
     }, [userData]);
     // eslint-disable-next-line react/prop-types
 
+    // removes the users auth-token to sign them out
     function logout() {
         localStorage.setItem("auth-token", "");
+        updateReload(true);
     }
+
     return (
         <header className="header flex-row">
             <div className="header-left">
+                {/* checks to see if the user is logged in, if so display the correct items in the header */}
                 {userRef.user != undefined ?
                     <div>
                         <h3 className="welcome">Welcome {userRef.user.username}</h3>
@@ -51,6 +56,7 @@ export default function Header({ userData }) {
             <div className="header-right">
                 <input type="text" placeholder="Search Recipe..." name="search" />
                 <RiSearchLine className="search-icon" style={{ height: '2em', width: '2em' }} />
+                {/* checks to see if the user is logged in, if so display the correct items in the header */}
                 {userRef.user != undefined ?
                     <div className="logged-in-icons">
                         <button><BsBookmarkHeart size={24}></BsBookmarkHeart>Saved</button>
@@ -65,6 +71,7 @@ export default function Header({ userData }) {
     );
 }
 
+// button themes for the header
 const theme = {
     grey: {
         default: "#95a5a6",

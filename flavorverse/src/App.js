@@ -1,21 +1,41 @@
+/* eslint-disable no-unused-vars */
 import './App.css';
 import { React, useEffect, useState } from 'react';
-import { Route, Routes, useLocation } from 'react-router-dom';
-import { AddRecipePath, HomePath, LoginPath, RegisterPath, Url } from './routePaths';
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { AddRecipePath, FilterQuery, HomePath, LoginPath, RecipesHome, RegisterPath, Url } from './routePaths';
 import Header from './Header';
 import Category from './Category';
 import Login from './Login';
 import Register from './Register';
 import AddRecipe from './AddRecipe';
+import RecipeList from './RecipeList';
 
 function App() {
   let location = useLocation();
+
+  const [reloadLogin, setReloadLogin] = useState();
+
+  let navigate = useNavigate();
   const [userData, setUserData] = useState({
     token: undefined,
     user: undefined,
   });
+
+  const [filter, setFilter] = useState('');
+
+  const updateReload = () => {
+    setReloadLogin(true);
+  }
+
+  const updateFilter = (name) => {
+    setFilter(name);
+  }
+
+  // logic to check if user already was signed in before by accessing their authentication token
   useEffect(() => {
     const checkLoggedIn = async () => {
+      setReloadLogin(false);
+
       let token = localStorage.getItem("auth-token");
       if (token === null) {
         localStorage.setItem("auth-token", "");
@@ -47,21 +67,24 @@ function App() {
                     user: data,
                   })
                 }
+                navigate(RecipesHome + FilterQuery);
               }
             )
           );
         }
       });
     }
+    setFilter('');
     checkLoggedIn();
-  }, [location]);
+  }, [reloadLogin === true]);
 
   return (
     <div className="App" >
-      <Header userData={userData} />
+      <Header userData={userData} updateReload={updateReload} />
       <Routes>
-        <Route exact path={HomePath} element={<Category />} />
-        <Route path={LoginPath} element={<Login />} />
+        <Route exact path={HomePath} element={[<Category key={0} updateFilter={updateFilter} />, <RecipeList key={1} filter={filter} userData={userData} />]} />
+        <Route exact path={RecipesHome} element={[<Category key={0} updateFilter={updateFilter} />, <RecipeList key={1} filter={filter} userData={userData} />]} />
+        <Route path={LoginPath} element={<Login updateReload={updateReload} />} />
         <Route path={RegisterPath} element={<Register />} />
         <Route path={AddRecipePath} element={<AddRecipe />} />
       </Routes>

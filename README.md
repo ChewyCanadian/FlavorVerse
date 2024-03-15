@@ -1,7 +1,15 @@
 To run website and database:
 
-Website: cd flavorverse 
-          npm start
+1. Download Node.js if not installed on device
 
-Database cd flavorverse/server
-          node server.js
+2. cd flavorverse
+
+3. npm install
+
+4. npm start
+
+5. open new terminal
+
+6. cd flavorverse/server
+
+7. node server.js

@@ -7,7 +7,7 @@ import { HomePath, LoginPath, RegisterPath, Url } from "./routePaths";
 import "./Login.css"
 
 // eslint-disable-next-line react/prop-types
-export default function Login() {
+export default function Login({ updateReload }) {
     const [user, setUser] = useState({ email: '', password: '' });
     const navigate = useNavigate();
 
@@ -20,8 +20,10 @@ export default function Login() {
     async function onSubmit(e) {
         e.preventDefault();
 
-        // eslint-disable-next-line no-unused-vars
+        // creates a copy of the user data
         const loginUser = { ...user };
+
+        // database communication to login the user
         await fetch(Url + LoginPath, {
             method: "POST",
             headers: {
@@ -30,15 +32,19 @@ export default function Login() {
             body: JSON.stringify(loginUser),
         })
             .then(async function (res) {
+                // checks if the backend has any issues
                 if (res.status == 400) {
                     await res.json().then(data => alert(data["msg"]));
                 }
                 else {
+                    // get the response data from the backend
                     await res.json().then(function (data) {
-                        //let userId = data["_id"];
+                        // fill the local storage with the users auth token
                         localStorage.setItem("auth-token", data.token);
                         setUser({ email: '', password: '' });
-                        navigate(HomePath, { state: { key: "value" } });
+                        // navigate back to home on successful login
+                        updateReload(true);
+                        navigate(HomePath);
                     });
                 }
             })
@@ -75,6 +81,7 @@ export default function Login() {
                     <div className="form-link">
                         <span>
                             Dont have an account?
+                            {/* sends the user to the register page */}
                             <NavLink className="link signup-link" to={RegisterPath}> Signup</NavLink>
                         </span>
                     </div>

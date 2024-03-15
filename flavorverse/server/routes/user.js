@@ -15,31 +15,6 @@ const dbo = require("../db/conn");
 // This help convert the id from string to ObjectId for the _id.
 const ObjectId = require("mongodb").ObjectId;
 
-
-// This section will help you get a list of all the records.
-// userRoutes.route("/user").get(function (req, res) {
-//     let db_connect = dbo.getDb("FlavorVerse");
-//     db_connect
-//         .collection("users")
-//         .find({})
-//         .toArray(function (err, result) {
-//             if (err) throw err;
-//             res.json(result);
-//         });
-// });
-
-// This section will help you get a single record by id
-// userRoutes.route("/user/:id").get(function (req, res) {
-//     let db_connect = getDb();
-//     let myquery = { _id: ObjectId(req.params.id) };
-//     db_connect
-//         .collection("users")
-//         .findOne(myquery, function (err, result) {
-//             if (err) throw err;
-//             res.json(result);
-//         });
-// });
-
 userRoutes.route('/').get(auth, async function (req, res) {
     let db_connect = dbo.getDb();
     let myquery = { _id: new ObjectId(req.user) };
@@ -54,12 +29,16 @@ userRoutes.route('/').get(auth, async function (req, res) {
 userRoutes.route('/tokenIsValid').post(async function (req, res) {
     try {
         let db_connect = dbo.getDb();
+
         const token = req.header("x-auth-token");
         if (!token) return res.json(false);
+
         const verified = jwt.verify(token, "passwordKey");
         if (!verified) return res.json(false);
+
         let myquery = { _id: new ObjectId(verified.id) };
         const user = await db_connect.collection("users").findOne(myquery);
+
         if (!user) return res.json(false);
         return res.json(true);
     } catch (error) {

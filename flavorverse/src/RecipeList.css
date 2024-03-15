@@ -1,0 +1,50 @@
+.recipe-list {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin: 0 3em;
+}
+
+.recipe-item {
+    width: 250px;
+    margin: 1em;
+    background-color: lightskyblue;
+    border-radius: 6px;
+}
+
+.recipe-img {
+    width: 100%;
+    height: 250px;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+}
+
+.heart-button {
+    margin: 0.3em;
+    outline-width: 10px;
+    border-radius: 50%;
+    width: 46px;
+    height: 46px;
+    position: absolute;
+}
+
+.recipe-item h3 {
+    text-align: left;
+    margin: 0.5em;
+}
+
+.tags {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.tags div {
+    background-color: white;
+    padding: 0.25em;
+    margin: 0.25em;
+    border-radius: 2px;
+}

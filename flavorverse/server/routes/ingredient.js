@@ -20,25 +20,29 @@ ingredientRoutes.route('/add_recipe/ingredient').post(async function (req, res) 
 
     const ingredientName = req.body;
 
-    for (let j = 0; j < ingredientName.length; j++) {
-        let concatWord = '';
-        const words = ingredientName[j].split(" ");
-        for (let i = 0; i < words.length; i++) {
-            words[i] = words[i][0].toUpperCase() + words[i].substr(1);
-            concatWord += words[i];
+    if (ingredientName[0] === '' || ingredientName === undefined)
+        return res.status(400).json({ msg: "Ingredient name must not be empty" });
+    else {
+        for (let j = 0; j < ingredientName.length; j++) {
+            let concatWord = '';
+            const words = ingredientName[j].split(" ");
+            for (let i = 0; i < words.length; i++) {
+                words[i] = words[i][0].toUpperCase() + words[i].substr(1);
+                concatWord += words[i];
 
-            if (i != words.length - 1)
-                concatWord += ' ';
+                if (i != words.length - 1)
+                    concatWord += ' ';
+            }
+            const existsIngredient = await db_connect.collection("ingredients").findOne({ ingredient_name: concatWord })
+            if (!existsIngredient) {
+                const addedRecipe = await db_connect.collection("ingredients").insertOne({ ingredient_name: concatWord });
+                if (!addedRecipe)
+                    return res.status(400).json({ msg: 'Error adding ingredient' });
+            }
         }
-        const existsIngredient = await db_connect.collection("ingredients").findOne({ ingredient_name: concatWord })
-        if (!existsIngredient) {
-            const addedRecipe = await db_connect.collection("ingredients").insertOne({ ingredient_name: concatWord });
-            if (!addedRecipe)
-                return res.status(400).json({ msg: 'Error adding ingredient' });
-        }
+
+        return res.json(true);
     }
-
-    return res.json(true);
 })
 
 module.exports = ingredientRoutes;

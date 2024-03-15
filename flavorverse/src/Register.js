@@ -11,16 +11,21 @@ export default function Register() {
     const [user, setUser] = useState({ username: '', email: '', password: '', confirmPassword: '' });
     const navigate = useNavigate();
 
+    // updates the users data 
     function updateUser(value) {
         return setUser((prev) => {
             return { ...prev, ...value };
         });
     }
 
+    // on click of the register button
     async function onSubmit(e) {
+        // prevent the page from reloading
         e.preventDefault();
 
+        // create a copy of the user data to send to the backend
         const newUser = { ...user };
+        // backend connection to register the user
         await fetch(Url + RegisterPath, {
             method: "POST",
             headers: {
@@ -29,26 +34,30 @@ export default function Register() {
             body: JSON.stringify(newUser),
         })
             .then(async function (res) {
-                console.log("response: " + res.status);
+                // checks to see if the backend has any issues
                 if (res.status == 400) {
+                    // display the validation messages in an alert
                     await res.json().then(data => alert(data["msg"]));
                 }
                 else {
+                    // reset the user data
                     setUser({ username: '', email: '', password: '', confirmPassword: '' });
+                    // send the user to the login page
                     navigate(LoginPath);
                 }
             })
             .catch(error => {
+                // display the error messages in an alert
                 window.alert(error);
                 return;
             });
-        // }
     }
 
     return (
         <div className="background">
             <div className="form register">
                 <div className="form-content">
+                    {/* close button */}
                     <NavLink to={HomePath}>
                         <SlClose className="close-register" />
                     </NavLink>
@@ -74,6 +83,7 @@ export default function Register() {
                     </form>
                     <div className="form-link">
                         <span>Already have an account?
+                            {/* sends the user to the login screen */}
                             <NavLink className="link login-link" to={LoginPath}> Login</NavLink>
                         </span>
                     </div>

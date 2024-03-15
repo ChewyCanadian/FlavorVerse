@@ -1,14 +1,16 @@
+/* eslint-disable no-unreachable */
+/* eslint-disable no-unused-vars */
 import { React, useState } from 'react';
 import './AddRecipe.css';
-import { Url, AddRecipePath, AddIngredientPath } from './routePaths';
+import { Url, AddRecipePath, AddIngredientPath, HomePath } from './routePaths';
 import { CiSquarePlus } from "react-icons/ci";
 import { SlClose } from "react-icons/sl";
 import Select from 'react-select'
 import makeAnimated from 'react-select/animated';
-//import { Url } from './routePaths';
+import { useNavigate } from 'react-router-dom';
 
 export default function AddRecipe() {
-    //const history = useHistory();
+    const navigate = useNavigate();
 
     // eslint-disable-next-line no-unused-vars
     const [times, setTimes] = useState(['sec', 'min', 'hr', 'day']);
@@ -20,24 +22,17 @@ export default function AddRecipe() {
 
     const [focusedIndex, setFocusedIndex] = useState(-1);
 
-    // eslint-disable-next-line no-unused-vars
-    const defaultIngredient = [{ id: 0, ingredientName: '', quantity: 0, measurement: 'tsp' }];
-    // eslint-disable-next-line no-unused-vars
-    const defaultStep = [{ id: stepId, description: '' }];
-
-    // eslint-disable-next-line no-unused-vars
-    const [tempIngredientName, setTempIngredientName] = useState('');
     const [ingredients, setIngredients] = useState([]);
     const [searchResults, setSearchResults] = useState([]);
 
     const [steps, setSteps] = useState([]);
 
-    const [file, setFile] = useState();
+    const [file, setFile] = useState({ preview: '', data: {} });
 
-    const [recipeTimes, setRecipeTimes] = useState({ prepTime: 0, prepMeasurement: 'sec', cookTime: 0, cookMeasurment: 'sec' });
+    const [recipeTimes, setRecipeTimes] = useState({ prepTime: 0, prepMeasurement: 'sec', cookTime: 0, cookMeasurement: 'sec' });
 
     const [recipe, setRecipe] = useState({
-        image: file,
+        // imageFile: { preview: '', file: {} },
         recipeName: '',
         servings: 0,
         description: ''
@@ -50,18 +45,24 @@ export default function AddRecipe() {
         { value: 'vegetarian', label: 'Vegetarian' },
         { value: 'breakfast', label: 'Breakfast' },
         { value: 'dessert', label: 'Dessert' },
-        { value: 'halal', label: 'Halal' }
+        { value: 'halal', label: 'Halal' },
+        { value: 'salad', label: 'Salad' }
     ];
     const animatedComponents = makeAnimated();
 
     const [selectedTags, setSelectedTags] = useState([]);
 
+    // logic to deal with setting the image of the recipe by the user
     function handleChange(e) {
-        console.log(e.target.files);
-        setFile(URL.createObjectURL(e.target.files[0]));
-        setRecipe({ ...recipe, image: URL.createObjectURL(e.target.files[0]) });
+        const img = {
+            preview: URL.createObjectURL(e.target.files[0]),
+            data: e.target.files[0],
+        };
+        setFile(img);
+        //setRecipe({ ...recipe, imageFile: { preview: URL.createObjectURL(e.target.files[0]), file: data } });
     }
 
+    // closes the search results for ingredients on ESCAPE press
     function handleKeyDown(e) {
         if (e.key === "Escape") {
             setSearchResults([]);
@@ -69,70 +70,94 @@ export default function AddRecipe() {
         }
     }
 
+    // sets the focused index when user clicks into one of the ingredient inputs
     function handleOnFocus(e) {
         setFocusedIndex(e.i);
     }
 
+    // updates the default recipe values
     function updateRecipe(value) {
         return setRecipe((prev) => {
             return { ...prev, ...value };
         });
     }
 
+    // updates the step descripions
     function updateStep(value) {
+        // iterates through each step in the state
         setSteps(steps.map((step, index) => {
+            // checks if it is undefined
             if (step === undefined) return;
+            // if the selected index matches the current mapped step
             if (index === value.id) {
+                // update that specific step description
                 return { ...step, description: value.description };
             }
+            // if not just return the pre-existing step
             else
                 return step;
         }))
     }
 
+    // updates the cook time select measurment
     function updateCookTime(value) {
-        setRecipeTimes({ ...recipeTimes, cookMeasurment: value.time });
+        setRecipeTimes({ ...recipeTimes, cookMeasurement: value.time });
     }
 
+    // updates the prep time select measurment
     function updatePrepTime(value) {
         setRecipeTimes({ ...recipeTimes, prepMeasurement: value.time });
     }
 
+    // updates the quantity of the selected ingredient
     function updateQuantity(value) {
+        // iterates through each ingredient in the state
         setIngredients(ingredients.map((ingredient, index) => {
+            // checks if it is undefined
             if (ingredient === undefined) return;
+            // if the selected index matches the current mapped ingredient
             if (index === value.id) {
                 return { ...ingredient, quantity: value.quantity }
             }
+            // if not just return the pre-existing ingredient
             else
                 return ingredient;
         }))
     }
 
-    function updateMeasurment(e) {
+    // updates the measurment of the selected ingredient
+    function updateMeasurement(e) {
+        // iterates through each ingredient in the state
         setIngredients(ingredients.map((ingredient, index) => {
+            // check if it is undefined
             if (ingredient === undefined) return;
+            // if the selected index matches the current mapped ingredient
             if (index === e.id)
                 return { ...ingredient, measurement: measurements[e.measurement] };
+            // if not just return the pre-existing ingredient
             else
                 return ingredient;
         }))
     }
 
     async function updateIngredient(value) {
-        setTempIngredientName(value.ingredientName);
-
+        // iterates through each ingredient in the state
         setIngredients(ingredients.map((ingredient, index) => {
+            // check if it is undefined
             if (ingredient === undefined) return;
+            // if the selected index matches the current mapped ingredient
             if (index === value.id) {
                 return { ...ingredient, ingredientName: value.ingredientName }
             }
+            // if not just return the pre-existing ingredient
             else
                 return ingredient;
         }))
 
+        // if the input field is empty show no resules
         if (!value.ingredientName.trim()) return setSearchResults([]);
 
+        // fetch all the ingredients from the database
         await fetch(Url + AddRecipePath, {
             method: 'GET',
             header: {
@@ -140,10 +165,11 @@ export default function AddRecipe() {
             }
         }).then(async function (res) {
             await res.json().then(async function (data) {
-                // create dropdown with results
+                // create dropdown with filtered results
                 const filteredList = data.filter((list) =>
                     list.ingredient_name.toLowerCase().startsWith(value.ingredientName.toLowerCase())
                 );
+                // set the state with the filtered results
                 setSearchResults(filteredList);
             })
         }).catch(error => {
@@ -151,54 +177,82 @@ export default function AddRecipe() {
         })
     }
 
+    // logic for clicking the add ingredient button
     async function onAddIngredientClick(e) {
+        // prevent redirect
         e.preventDefault();
+        // creates an new ingredient
         setIngredients((prev) => { return [...prev, { id: ingredientId, ingredientName: '', quantity: 0, measurement: 'tsp' }] });
+        // increments id by 1
         setIngredientId(ingredientId + 1);
     }
 
+    // logic for clicking the add step button
     async function onAddStepClick(e) {
+        // prevent redirect
         e.preventDefault();
+        // creates an new ingredient
         setSteps((prev) => { return [...prev, { id: stepId, description: '' }] });
+        // increments id by 1
         setStepId(stepId + 1);
     }
 
+    // logic when selecting an option from the ingredients dropdown
     async function selectOption(value) {
-        setTempIngredientName(value.ingredientName);
+        // empty the search results
         setSearchResults([]);
-
+        // iterates through the ingredients
         setIngredients(ingredients.map((ingredient, index) => {
+            // checks if it is undefined
             if (ingredient === undefined) return;
+            // if the selected index matches the current mapped ingredient
             if (index === value.id) {
                 return { ...ingredient, ingredientName: value.ingredientName }
             }
+            // if not return the current ingredient
             else
                 return ingredient;
         }))
     }
 
+    // logic for on submit
     async function onSubmit(e) {
         e.preventDefault();
 
         let tags = [];
-        selectedTags.tags.map((tag) => tags.push({ tag: tag.value }))
+        // grabs all the selected tag values
+        selectedTags.tags.map((tag) => tags.push(tag.value))
 
+        let formData = new FormData();
+        formData.append('file', file.data);
+
+        // for (var pair of formData.entries()) {
+        //     console.log(pair[0] + ', ' + pair[0].name);
+        // }
+
+        let publicUrl = '';
+        await fetch(Url + "/add_image", {
+            method: "POST",
+            body: formData
+        })
+            .then((res) => res.json().then(data => publicUrl = data));
+
+        // create a completed recipe with all the data and nicely formatted
         const completeRecipe = {
-            image: recipe.image,
+            publicUrl: publicUrl,
             title: recipe.recipeName,
             description: recipe.description,
             tags: tags,
             servings: recipe.servings,
             prepTime: recipeTimes.prepTime,
-            prepTimeMeasurment: recipeTimes.prepMeasurement,
+            prepTimeMeasurement: recipeTimes.prepMeasurement,
             cookTime: recipeTimes.cookTime,
-            cookTimeMeasurment: recipeTimes.cookTimeMeasurment,
-            ingredients: { ...ingredients },
-            steps: { ...steps }
+            cookTimeMeasurement: recipeTimes.cookMeasurement,
+            ingredients: [...ingredients],
+            steps: [...steps]
         };
 
-        console.log(completeRecipe);
-
+        // backend communication to add the recipe to the database
         await fetch(Url + AddRecipePath, {
             method: "POST",
             headers: {
@@ -206,16 +260,21 @@ export default function AddRecipe() {
             },
             body: JSON.stringify(completeRecipe),
         }).then(async function (res) {
+            // check if the backend had any issues with validation
             if (res.status == 400) {
+                // display validation errors
                 await res.json().then(data => alert(data["msg"]));
             }
             else {
+                // change the URL for next POST
                 window.history.replaceState("", "", AddIngredientPath);
                 let ingredientsToPost = [];
+                // get all the ingredient names from the ingredients
                 for (let i = 0; i < ingredients.length; i++) {
                     ingredientsToPost[i] = ingredients[i].ingredientName;
                 }
 
+                // backend connection to add the ingredients to the database
                 await fetch(Url + AddIngredientPath, {
                     method: "POST",
                     headers: {
@@ -223,11 +282,13 @@ export default function AddRecipe() {
                     },
                     body: JSON.stringify(ingredientsToPost)
                 }).then(async function (res) {
+                    // check if there was an error when adding the ingredient
                     if (res.status == 400) {
                         await res.json().then(data => alert(data["msg"]));
                     }
-                    else
-                        window.history.replaceState("", "", AddRecipePath);
+                    // send the user back
+                    // else
+                    //     navigate(HomePath);
                 });
 
                 console.log("successfully finished everything");
@@ -243,7 +304,7 @@ export default function AddRecipe() {
                 <div className="recipe left-recipe">
                     <div className='top-section'>
                         <div className='field image-field'>
-                            <img className="recipe-image" src={file}></img>
+                            <img className="recipe-image" src={file.preview}></img>
                             <label htmlFor="recipe-image" value="Upload Image"></label>
                             <input id="recipe-image" type="file" onChange={handleChange} accept="image/png, image/jpeg" required />
                         </div>
@@ -278,13 +339,14 @@ export default function AddRecipe() {
                         </div>
                     </div>
                     <div className="field input-field">
-                        {/* <input type="text" value={recipe.description} onChange={(e) => updateRecipe({ description: e.target.value })} placeholder='Description' className='input recipe-name' required /> */}
                         <textarea value={recipe.description} onChange={(e) => updateRecipe({ description: e.target.value })} placeholder='Description' className='input recipe-description' required ></textarea>
                     </div>
                     <div>
                         <Select isMulti className="basic-multi-select" pageSize={4}
                             classNamePrefix="select" closeMenuOnSelect={false}
-                            components={animatedComponents} options={tagOptions} onChange={(e) => setSelectedTags({ ...selectedTags, tags: e })} />
+                            components={animatedComponents} options={tagOptions}
+                            maxMenuHeight={150}
+                            onChange={(e) => setSelectedTags({ ...selectedTags, tags: e })} />
                         <button type='submit' className="submit-recipe">Submit Recipe</button>
                     </div>
                 </div>
@@ -292,6 +354,7 @@ export default function AddRecipe() {
                     <div className='ingredients'>
                         <label>Ingredients: </label> <br></br>
                         <div className='list ingredients'>
+                            {/* displays all the ingredients in the ingredients state */}
                             {ingredients.map((ingredient, index) => (
                                 <div key={index}>
                                     <div className='ingredient-input'>
@@ -299,12 +362,13 @@ export default function AddRecipe() {
                                             <SlClose className='button-close' size={20} onClick={() => { setIngredients(ingredients.filter(ingr => ingr.id !== ingredient.id)) }}></SlClose>
                                             <input type="text" value={ingredient.ingredientName} onChange={(e) => updateIngredient({ id: index, ingredientName: e.target.value })} onFocus={() => handleOnFocus({ i: index })} onKeyDown={(e) => handleKeyDown({ key: e.key })} placeholder='Enter Ingredient' className='input ingredient'></input>
                                             <input type="number" value={ingredient.quantity} onChange={(e) => updateQuantity({ id: index, quantity: e.target.value })} placeholder='0' className='input quantity' required />
-                                            <select className='field select' onChange={(e) => updateMeasurment({ id: index, measurement: e.target.value })}>
+                                            <select className='field select' onChange={(e) => updateMeasurement({ id: index, measurement: e.target.value })}>
                                                 {measurements.map((measurement, key) => <option key={key} value={key}>{measurement}</option>)}
                                             </select>
                                         </div>
                                         {focusedIndex == index ?
                                             <div className='result-container'>
+                                                {/* displays all the search results in the searchResults state */}
                                                 {searchResults.map((result, searchIndex) => (
                                                     <div key={searchIndex} className='result-item'><p className='item' onClick={() => selectOption({ id: index, ingredientName: result.ingredient_name })}>{result.ingredient_name}</p></div>
                                                 ))}
@@ -322,6 +386,7 @@ export default function AddRecipe() {
                     <div className='steps'>
                         <label>Steps: </label> <br></br>
                         <div className='list steps'>
+                            {/* displays all the steps in the steps state */}
                             {steps.map((step, index) => (
                                 <div key={index}>
                                     <SlClose className='button-close' size={20} onClick={() => { setSteps(steps.filter(stp => stp.id !== step.id)) }}></SlClose>
