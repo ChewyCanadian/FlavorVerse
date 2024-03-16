@@ -39,14 +39,11 @@ recipeRoutes.route("/add_image").post(multerStorage.single('file'), async functi
     });
 
     stream.on('finish', () => {
-        console.log("stream finish");
-        console.log(file.publicUrl());
         publicUrl = file.publicUrl();
         return res.json(publicUrl);
     });
 
     stream.end(req.file.buffer);
-    //console.log(publicUrl);
 })
 
 recipeRoutes.route("/add_recipe").post(async function (req, res) {
@@ -71,7 +68,7 @@ recipeRoutes.route("/add_recipe").post(async function (req, res) {
     }
 
     const newRecipe = {
-        imageFile: publicUrl,
+        image: publicUrl,
         title: title,
         description: description,
         tags: tags,
@@ -81,7 +78,8 @@ recipeRoutes.route("/add_recipe").post(async function (req, res) {
         cookTime: cookTime,
         cookTimeMeasurement: cookTimeMeasurement,
         ingredients: ingredients,
-        steps: steps
+        steps: steps,
+        likes: 0
     }
 
     const addedRecipe = await db_connect.collection("recipes").insertOne(newRecipe);

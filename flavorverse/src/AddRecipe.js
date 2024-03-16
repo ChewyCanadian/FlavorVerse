@@ -15,7 +15,7 @@ export default function AddRecipe() {
     // eslint-disable-next-line no-unused-vars
     const [times, setTimes] = useState(['sec', 'min', 'hr', 'day']);
     // eslint-disable-next-line no-unused-vars
-    const [measurements, setMeasurements] = useState(['tsp', 'tbsp', 'cup', 'pt', 'qt', 'gal', 'oz', 'fl oz', 'lb']);
+    const [measurements, setMeasurements] = useState(['tsp', 'tbsp', 'cup', 'pt', 'qt', 'gal', 'oz', 'fl oz', 'lb', 'pckg']);
 
     const [stepId, setStepId] = useState(0);
     const [ingredientId, setIngredientId] = useState(0);
@@ -41,12 +41,14 @@ export default function AddRecipe() {
     const tagOptions = [
         { value: 'meat', label: 'Meat' },
         { value: 'soup', label: 'Soup' },
-        { value: 'vegan', label: 'Vegan' },
-        { value: 'vegetarian', label: 'Vegetarian' },
+        { value: 'seafood', label: 'Seafood' },
+        { value: 'pasta', label: 'Pasta' },
+        { value: 'salad', label: 'Salad' },
+        { value: 'healthy', label: 'Healthy' },
         { value: 'breakfast', label: 'Breakfast' },
+        { value: 'lunch', label: 'Lunch' },
+        { value: 'dinner', label: 'Dinner' },
         { value: 'dessert', label: 'Dessert' },
-        { value: 'halal', label: 'Halal' },
-        { value: 'salad', label: 'Salad' }
     ];
     const animatedComponents = makeAnimated();
 
@@ -234,8 +236,7 @@ export default function AddRecipe() {
         await fetch(Url + "/add_image", {
             method: "POST",
             body: formData
-        })
-            .then((res) => res.json().then(data => publicUrl = data));
+        }).then((res) => res.json().then(data => publicUrl = data));
 
         // create a completed recipe with all the data and nicely formatted
         const completeRecipe = {
@@ -287,8 +288,8 @@ export default function AddRecipe() {
                         await res.json().then(data => alert(data["msg"]));
                     }
                     // send the user back
-                    // else
-                    //     navigate(HomePath);
+                    else
+                        navigate(HomePath);
                 });
 
                 console.log("successfully finished everything");
@@ -345,7 +346,7 @@ export default function AddRecipe() {
                         <Select isMulti className="basic-multi-select" pageSize={4}
                             classNamePrefix="select" closeMenuOnSelect={false}
                             components={animatedComponents} options={tagOptions}
-                            maxMenuHeight={150}
+                            maxMenuHeight={150} required
                             onChange={(e) => setSelectedTags({ ...selectedTags, tags: e })} />
                         <button type='submit' className="submit-recipe">Submit Recipe</button>
                     </div>

@@ -31,3 +31,12 @@
     padding-top: 10%;
     margin: 0;
 }
+
+.category a {
+    text-decoration: underline;
+    margin-bottom: 2.8em;
+}
+
+.category a:hover {
+    cursor: pointer;
+}

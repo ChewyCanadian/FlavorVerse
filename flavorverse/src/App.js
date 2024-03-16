@@ -2,13 +2,14 @@
 import './App.css';
 import { React, useEffect, useState } from 'react';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-import { AddRecipePath, FilterQuery, HomePath, LoginPath, RecipesHome, RegisterPath, Url } from './routePaths';
+import { AddRecipePath, FilterQuery, HomePath, LoginPath, RecipePath, RecipesHome, RegisterPath, Url } from './routePaths';
 import Header from './Header';
 import Category from './Category';
 import Login from './Login';
 import Register from './Register';
 import AddRecipe from './AddRecipe';
 import RecipeList from './RecipeList';
+import Recipe from './Recipe';
 
 function App() {
   let location = useLocation();
@@ -87,6 +88,7 @@ function App() {
         <Route path={LoginPath} element={<Login updateReload={updateReload} />} />
         <Route path={RegisterPath} element={<Register />} />
         <Route path={AddRecipePath} element={<AddRecipe />} />
+        <Route path={RecipePath + "/:id"} element={<Recipe />} />
       </Routes>
       <div id="root"></div>
     </div>

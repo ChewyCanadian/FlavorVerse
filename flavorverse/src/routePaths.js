@@ -1,6 +1,7 @@
 export const Url = 'http://localhost:5000';
 export const HomePath = '/';
 export const RecipesHome = '/recipes'
+export const RecipePath = '/recipe'
 export const UserData = '?user='
 export const FilterQuery = '?filter='
 export const LoginPath = '/login';

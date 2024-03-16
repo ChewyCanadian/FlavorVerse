@@ -5,6 +5,11 @@ import { GiCupcake } from "react-icons/gi";
 import { LuSalad } from "react-icons/lu";
 import { GiMeat } from "react-icons/gi";
 import { LuSoup } from "react-icons/lu";
+import { IoPizzaOutline } from "react-icons/io5";
+import { IoFishOutline } from "react-icons/io5";
+import { MdOutlineFreeBreakfast } from "react-icons/md";
+import { MdOutlineLunchDining } from "react-icons/md";
+import { MdDinnerDining } from "react-icons/md";
 import { useLocation, useNavigate } from "react-router-dom";
 import { FilterQuery } from "./routePaths";
 
@@ -14,9 +19,14 @@ function Category({ updateFilter }) {
     const location = useLocation();
 
     const filters = [
-        { button: <LuSalad />, name: 'Salad' },
         { button: <GiMeat />, name: 'Meat' },
+        { button: <IoFishOutline />, name: 'Seafood' },
+        { button: <IoPizzaOutline />, name: 'Pasta' },
         { button: <LuSoup />, name: 'Soup' },
+        { button: <LuSalad />, name: 'Salad' },
+        { button: <MdOutlineFreeBreakfast />, name: 'Breakfast' },
+        { button: <MdOutlineLunchDining />, name: 'Lunch' },
+        { button: <MdDinnerDining />, name: 'Dinner' },
         { button: <GiCupcake />, name: 'Dessert' },
     ]
 
@@ -31,6 +41,11 @@ function Category({ updateFilter }) {
         //window.history.replaceState("", "", location.pathname + FilterQuery + e.toLowerCase());
     }
 
+    function clearFilter() {
+        updateFilter('');
+        navigate(location.pathname + FilterQuery);
+    }
+
     return (
         <div className="category flex-row">
             {filters.map((filter, index) => (
@@ -41,6 +56,7 @@ function Category({ updateFilter }) {
                     <p>{filter.name}</p>
                 </button>
             ))}
+            <a onClick={clearFilter}>Clear Filter</a>
         </div>
     );
 }
