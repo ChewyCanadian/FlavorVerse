@@ -43,7 +43,8 @@ export default function RecipeList({ userData, filter }) {
             })
         }
         // checks if there is userdata before accessing backend
-        if (userData.user) { getRecipes(); }
+        //if (userData.user) { getRecipes(); }
+        getRecipes();
     }, [userData, filter]);
 
     useEffect(() => {
@@ -52,6 +53,7 @@ export default function RecipeList({ userData, filter }) {
         // }
     }, [recipes])
 
+    // send the user to the selected recipe with the recipe data
     function recipeClick(data) {
         navigate(`${RecipePath}/${data._id}`, { state: data })
     }
@@ -65,19 +67,14 @@ export default function RecipeList({ userData, filter }) {
                         <IconContext.Provider value={{ className: "heart-button", size: 36, color: iconColour }}>
                             <PiHeartStraightDuotone onClick={() => { if (iconColour === '#000000') { setIconColour("#ff0000") } else { setIconColour("#000000") } }} />
                         </IconContext.Provider>
-                        <div className='card-likes'><PiHeartStraightFill size={18} color='#ff0000' /> 0</div>
+                        <div className='card-likes'><PiHeartStraightFill size={18} color='#ff0000' /> {recipe.likes}</div>
                         <img src={recipe.image} className='recipe-img' onClick={() => recipeClick(recipe)}></img>
                         <div className='card-body' onClick={() => recipeClick(recipe)}>
                             <p>{recipe.title}</p>
                             <div className='tags'>
-                                {/* {recipe.tags.map((tag, key) => (
+                                {recipe.tags.map((tag, key) => (
                                     <div key={key}>{tag}</div>
-                                ))} */}
-                                <div>breakfast</div>
-                                <div>lunch</div>
-                                <div>dinner</div>
-                                <div>meat</div>
-                                <div>seafood</div>
+                                ))}
                             </div>
                         </div>
                     </div>

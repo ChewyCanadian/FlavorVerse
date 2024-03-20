@@ -8,4 +8,5 @@ export const LoginPath = '/login';
 export const RegisterPath = '/register';
 export const AddRecipePath = '/add_recipe';
 export const AddIngredientPath = '/add_recipe/ingredient';
+export const ShowSavedRecipePath = '/saved-recipes';
 export const LikedRecipePath = '/liked_recipes';

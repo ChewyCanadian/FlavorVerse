@@ -1,7 +1,7 @@
 import { React, useState, useEffect } from "react";
 import styled from "styled-components";
 import logo from "./logo-no-background.png";
-import { AddRecipePath, HomePath, LoginPath, RegisterPath } from './routePaths';
+import { AddRecipePath, HomePath, LoginPath, RegisterPath, ShowSavedRecipePath } from './routePaths';
 import "./Header.css"
 import { NavLink } from "react-router-dom";
 import { RiSearchLine } from 'react-icons/ri';
@@ -59,7 +59,9 @@ export default function Header({ userData, updateReload }) {
                 {/* checks to see if the user is logged in, if so display the correct items in the header */}
                 {userRef.user != undefined ?
                     <div className="logged-in-icons">
-                        <button><BsBookmarkHeart size={24}></BsBookmarkHeart>Saved</button>
+                        <NavLink className="nav-link" to={ShowSavedRecipePath}>
+                            <button><BsBookmarkHeart size={24}></BsBookmarkHeart>Saved</button>
+                        </NavLink>
                         <NavLink className="nav-link" to={AddRecipePath}>
                             <button><BsJournalPlus size={24}></BsJournalPlus>Add</button>
                         </NavLink>
